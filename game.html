@@ -4,24 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sudoku Royale | Oyun Alanı</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F172A">
+    <link rel="apple-touch-icon" href="img/icon.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sudoku Royale">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
 </head>
 <body>
 
-    <div class="game-header">
-        <div class="game-info">
-            <span id="diff-label">Zorluk: </span>
+    <div class="game-header" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+        <div style="flex: 1;">
+            <button class="theme-btn-minimal" id="theme-btn">🌙</button>
         </div>
-        <div id="room-info" class="hidden">
-            <span class="room-badge">Oda: <span id="game-room-code"></span></span>
+        <div style="flex: 2; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div id="diff-label" style="font-weight: 600; color: var(--text-muted); font-size: 1.05rem;">Zorluk: </div>
+            <div id="room-info" class="hidden">
+                <span class="room-badge" style="white-space: nowrap; padding: 4px 10px; font-size: 0.9rem;">Oda: <span id="game-room-code"></span></span>
+            </div>
+            <div id="game-timer" style="font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--primary);">00:00</div>
         </div>
-        <button class="btn btn-outline" style="width: auto; padding: 5px 15px; margin:0;" onclick="quitGame()">Çık</button>
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+            <button class="btn btn-outline" style="width: auto; padding: 5px 15px; margin:0;" onclick="quitGame()">Çık</button>
+        </div>
     </div>
 
-    <div class="status-bar" id="game-status">
-        <div class="player-score myself">Sen: <span id="my-progress">0</span>%</div>
-        <div class="player-score error-score" id="mistake-box">Hata: <span id="mistake-count">0</span>/3</div>
-        <div class="player-score opponent hidden" id="op-score-box">Rakip: <span id="op-progress">0</span>%</div>
+    <div class="status-bar" id="game-status" style="width: 100%; display: flex; justify-content: space-between; gap: 5px; margin-bottom: 20px;">
+        <div class="player-score myself" style="white-space: nowrap; flex: 1; text-align: center; padding: 8px 5px;">Sen: <span id="my-progress">0</span>%</div>
+        <div class="player-score error-score" id="mistake-box" style="white-space: nowrap; flex: 1; text-align: center; padding: 8px 5px;">Hata: <span id="mistake-count">0</span>/3</div>
+        <div class="player-score opponent hidden" id="op-score-box" style="white-space: nowrap; flex: 1; text-align: center; padding: 8px 5px;">Rakip: <span id="op-progress">0</span>%</div>
     </div>
 
     <!-- The Sudoku Board -->
@@ -40,7 +53,7 @@
         <button class="numpad-btn" data-val="7">7</button>
         <button class="numpad-btn" data-val="8">8</button>
         <button class="numpad-btn" data-val="9">9</button>
-        <button class="numpad-btn" data-val="clear" style="background: rgba(255,118,117,0.2); color: var(--danger);">Sil</button>
+        <button class="numpad-btn" id="btn-note-toggle" style="background: var(--card-bg); font-size:1rem; border-color: var(--primary); color: var(--primary);">Not Al</button>
     </div>
 
     <!-- Win/Lose Modal -->
@@ -52,6 +65,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="js/sudoku.js"></script>
     <script src="js/game.js"></script>
 </body>

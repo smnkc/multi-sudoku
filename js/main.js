@@ -155,3 +155,41 @@ function startGameObj(state) {
     }));
     window.location.href = 'game.html';
 }
+
+function initPWAPrompt() {
+    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) return;
+
+    const lastPromptDate = localStorage.getItem('pwa_prompt_date');
+    const now = new Date().getTime();
+    if (lastPromptDate && now - parseInt(lastPromptDate) < 86400000) return;
+
+    const ua = navigator.userAgent.toLowerCase();
+    const isIos = /ipad|iphone|ipod/.test(ua) && !window.MSStream;
+    const isAndroid = /android/.test(ua);
+    
+    let instructions = "";
+    if (isIos) {
+        instructions = "Ana ekrana eklemek için <br>menüden paylaş simgesine <svg style='width:14px;height:14px;vertical-align:-2px;' fill='currentColor' viewBox='0 0 24 24'><rect width='10' height='12' x='7' y='10' fill='none' stroke='currentColor' stroke-width='2' rx='2'/><path stroke='currentColor' stroke-width='2' stroke-linecap='round' d='M12 12V3m0 0l-3 3m3-3l3 3'/></svg> dokunun.";
+    } else if (isAndroid) {
+        instructions = "Hızlı oynamak için tarayıcı <br>menüsünden ⋮ 'Ana Ekrana Ekle' seçin.";
+    } else {
+        return; 
+    }
+
+    const pwaPrompt = document.getElementById('pwa-prompt');
+    const pwaInst = document.getElementById('pwa-instructions');
+    if (pwaPrompt && pwaInst) {
+        pwaInst.innerHTML = instructions;
+        pwaPrompt.classList.remove('hidden');
+    }
+}
+
+window.dismissPWA = function() {
+    const promptEl = document.getElementById('pwa-prompt');
+    if (promptEl) promptEl.classList.add('hidden');
+    localStorage.setItem('pwa_prompt_date', new Date().getTime().toString());
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initPWAPrompt();
+});

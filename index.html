@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku Royale | Modern Multiplayer</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F172A">
+    <link rel="apple-touch-icon" href="img/icon.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sudoku Royale">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
 </head>
 <body>
 
@@ -66,8 +73,27 @@
             <div id="join-error" class="hidden" style="color: var(--danger); margin-top: 10px;"></div>
             <button class="btn btn-outline mt-3" onclick="showView('view-main')">Geri</button>
         </div>
+
+        <!-- Theme Setting Footer -->
+        <div style="margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--card-border); text-align: center;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; letter-spacing: 1px;">ARAYÜZ TEMASI</p>
+            <button class="theme-btn-minimal" id="theme-btn" style="border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; margin: 0 auto; padding: 0;">🌙</button>
+        </div>
     </div>
 
+    <!-- PWA Install Prompt -->
+    <div id="pwa-prompt" class="hidden" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(30,41,59, 0.95); backdrop-filter: blur(10px); color: #F8FAFC; padding: 15px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 9999; border: 1px solid rgba(255,255,255,0.1); border-left: 4px solid var(--primary); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="img/icon.svg" style="width: 45px; height: 45px; border-radius: 10px; flex-shrink: 0;" alt="Icon">
+            <div>
+                <h4 style="margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 600;">Sudoku Royale</h4>
+                <p id="pwa-instructions" style="margin: 0; font-size: 0.8rem; color: #CBD5E1; line-height: 1.3; font-weight: 300;"></p>
+            </div>
+        </div>
+        <button onclick="dismissPWA()" style="background: none; border: none; font-size: 1.8rem; color: #94A3B8; cursor: pointer; padding: 5px 10px;">&times;</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="js/sudoku.js"></script>
     <script src="js/main.js"></script>
 </body>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <!-- Background -->
+    <rect width="512" height="512" rx="115" fill="#0F172A"/>
+    
+    <!-- Central Accent Grid -->
+    <rect x="106" y="106" width="300" height="300" rx="40" fill="#1E293B"/>
+    
+    <!-- Big S -->
+    <text x="256" y="350" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="240" fill="#818CF8" text-anchor="middle">S</text>
+    
+    <!-- Star/Moon Deco -->
+    <circle cx="390" cy="120" r="35" fill="#FBBF24" />
+</svg>

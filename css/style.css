@@ -17,8 +17,42 @@
     --cell-border: #E2E8F0;
     --grid-border: #94A3B8;
     
+    --cell-fixed-bg: #F1F5F9;
+    --cell-hover-bg: #EEF2FF;
+    --cell-selected-bg: #E0E7FF;
+    --cell-highlight-bg: #DBEAFE;
+
+    --option-bg: #FFFFFF;
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231F2937' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    --form-bg: rgba(15, 23, 42, 0.05);
+    --form-border: rgba(15, 23, 42, 0.15);
+
     --cell-size: 50px;
     --cell-size-mobile: 10vw;
+}
+
+[data-theme="dark"] {
+    --bg-gradient-start: #0F172A;
+    --bg-gradient-end: #020617;
+    --card-bg: rgba(51, 65, 85, 0.85);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-main: #F8FAFC;
+    --text-muted: #CBD5E1;
+    --cell-bg: #1E293B;
+    --cell-border: rgba(255, 255, 255, 0.1);
+    --grid-border: #475569;
+
+    --cell-fixed-bg: #334155;
+    --cell-hover-bg: #475569;
+    --cell-selected-bg: #1D4ED8;
+    --cell-highlight-bg: #1E40AF;
+    --primary: #818CF8;
+    --success: #34D399;
+
+    --option-bg: #1E293B;
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F8FAFC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    --form-bg: rgba(255, 255, 255, 0.1);
+    --form-border: rgba(255, 255, 255, 0.2);
 }
 
 * {
@@ -27,9 +61,16 @@
     padding: 0;
 }
 
+html, body {
+    overscroll-behavior: none; /* Prevents pull-to-refresh & iOS rubber-band bounce */
+}
+
 body {
     font-family: 'Outfit', sans-serif;
-    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-color: var(--bg-gradient-start);
+    background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Ctext x='50' y='80' font-family='Outfit, sans-serif' font-weight='800' font-size='80' fill='rgba(79,70,229,0.04)' transform='rotate(-15 50 80)'%3E3%3C/text%3E%3Ctext x='350' y='120' font-family='Outfit, sans-serif' font-weight='800' font-size='120' fill='rgba(6,182,212,0.03)' transform='rotate(20 350 120)'%3E8%3C/text%3E%3Ctext x='150' y='350' font-family='Outfit, sans-serif' font-weight='800' font-size='100' fill='rgba(79,70,229,0.05)' transform='rotate(-10 150 350)'%3E1%3C/text%3E%3Ctext x='400' y='400' font-family='Outfit, sans-serif' font-weight='800' font-size='60' fill='rgba(6,182,212,0.04)' transform='rotate(15 400 400)'%3E5%3C/text%3E%3Ctext x='250' y='450' font-family='Outfit, sans-serif' font-weight='800' font-size='90' fill='rgba(79,70,229,0.03)' transform='rotate(-25 250 450)'%3E9%3C/text%3E%3Ctext x='30' y='250' font-family='Outfit, sans-serif' font-weight='800' font-size='65' fill='rgba(6,182,212,0.04)' transform='rotate(12 30 250)'%3E4%3C/text%3E%3Ctext x='450' y='60' font-family='Outfit, sans-serif' font-weight='800' font-size='75' fill='rgba(79,70,229,0.03)' transform='rotate(-8 450 60)'%3E7%3C/text%3E%3Ctext x='200' y='180' font-family='Outfit, sans-serif' font-weight='800' font-size='70' fill='rgba(6,182,212,0.05)' transform='rotate(25 200 180)'%3E2%3C/text%3E%3Ctext x='380' y='260' font-family='Outfit, sans-serif' font-weight='800' font-size='85' fill='rgba(79,70,229,0.04)' transform='rotate(-18 380 260)'%3E6%3C/text%3E%3C/svg%3E"),
+        linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
@@ -38,6 +79,18 @@ body {
     justify-content: center;
     overflow-x: hidden;
     padding: 20px;
+    
+    /* Native App Feel Properties */
+    touch-action: manipulation; /* Prevents double-tap zoom */
+    -webkit-touch-callout: none; /* Prevents long-press copy popup on iOS */
+    -webkit-user-select: none; /* Safari */
+    user-select: none; /* Standard syntax */
+}
+
+/* Ensure inputs remain usable */
+input, select, textarea {
+    -webkit-user-select: auto;
+    user-select: auto;
 }
 
 /* Glassmorphism Classes */
@@ -48,6 +101,25 @@ body {
     border: 1px solid var(--card-border);
     border-radius: 20px;
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+.theme-btn-minimal {
+    background: transparent;
+    border: 2px solid var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 10px;
+    line-height: 1;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.theme-btn-minimal:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .title {
@@ -137,8 +209,8 @@ body {
 .form-control {
     width: 100%;
     padding: 14px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--card-border);
+    background: var(--form-bg);
+    border: 1px solid var(--form-border);
     border-radius: 10px;
     color: var(--text-main);
     font-family: 'Outfit', sans-serif;
@@ -152,14 +224,14 @@ body {
 select.form-control {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231F2937' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: var(--select-chevron);
     background-repeat: no-repeat;
     background-position: right 14px center;
     background-size: 16px;
 }
 
 select.form-control option {
-    background: #FFFFFF;
+    background: var(--option-bg);
     color: var(--text-main);
 }
 
@@ -208,6 +280,7 @@ select.form-control option {
 }
 
 .sudoku-cell {
+    position: relative;
     background: var(--cell-bg);
     width: 100%;
     height: 100%;
@@ -233,20 +306,46 @@ select.form-control option {
 .sudoku-cell.fixed {
     color: var(--text-main);
     cursor: default;
-    background: #F1F5F9;
+    background: var(--cell-fixed-bg);
 }
 
 .sudoku-cell:hover:not(.fixed) {
-    background: #EEF2FF;
+    background: var(--cell-hover-bg);
 }
 
 .sudoku-cell.selected {
-    background: #E0E7FF;
+    background: var(--cell-selected-bg);
     box-shadow: inset 0 0 0 2px var(--primary);
 }
 
+.note-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    pointer-events: none;
+}
+.note-num {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.mode-active {
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: inset 0 0 0 2px var(--success) !important;
+    color: var(--success) !important;
+}
+
 .sudoku-cell.highlighted {
-    background: #DBEAFE;
+    background: var(--cell-highlight-bg);
 }
 
 .sudoku-cell.error {

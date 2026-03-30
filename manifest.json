@@ -1,0 +1,17 @@
+{
+    "name": "Sudoku Royale",
+    "short_name": "Sudoku",
+    "description": "Modern, Multiplayer & Serverless Sudoku Game",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0F172A",
+    "theme_color": "#0F172A",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "./img/icon.svg",
+            "sizes": "192x192 512x512",
+            "type": "image/svg+xml"
+        }
+    ]
+}

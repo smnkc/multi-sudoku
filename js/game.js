@@ -17,6 +17,26 @@ let totalEmptyCells = (gameData.initialBoard || board).filter(val => val === 0).
 let mistakes = gameData.mistakes || 0;
 const MAX_MISTAKES = 3;
 
+let notes = gameData.notes || {};
+let startTime = gameData.startTime || Date.now();
+let isNoteMode = false;
+let timerInterval = null;
+
+if (!gameData.startTime) {
+    gameData.startTime = startTime;
+    localStorage.setItem('sudoku_game', JSON.stringify(gameData));
+}
+
+function updateFormatTime() {
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(s / 60).toString().padStart(2, '0');
+    const sec = (s % 60).toString().padStart(2, '0');
+    const el = document.getElementById('game-timer');
+    if (el) el.innerText = `${m}:${sec}`;
+}
+timerInterval = setInterval(updateFormatTime, 1000);
+updateFormatTime();
+
 // Keep original empty cell count safe
 if (!gameData.initialBoard) {
     gameData.initialBoard = [...board];
@@ -27,6 +47,7 @@ function saveLocalState() {
     gameData.board = board;
     gameData.myProgress = myProgress;
     gameData.mistakes = mistakes;
+    gameData.notes = notes;
     localStorage.setItem('sudoku_game', JSON.stringify(gameData));
 }
 
@@ -54,21 +75,42 @@ function initTitle() {
     updateScores();
 }
 
+function renderCell(i) {
+    const cell = boardEl.children[i];
+    if (board[i] !== 0) {
+        cell.innerHTML = board[i];
+    } else {
+        cell.innerHTML = '';
+        if (notes[i] && notes[i].length > 0) {
+            let noteHTML = '<div class="note-grid">';
+            for(let n=1; n<=9; n++) {
+                if (notes[i].includes(n)) {
+                    noteHTML += `<div class="note-num">${n}</div>`;
+                } else {
+                    noteHTML += `<div></div>`;
+                }
+            }
+            noteHTML += '</div>';
+            cell.innerHTML = noteHTML;
+        }
+    }
+}
+
 function renderBoard() {
     boardEl.innerHTML = '';
     for (let i = 0; i < 81; i++) {
         const cell = document.createElement('div');
         cell.className = 'sudoku-cell';
         cell.dataset.index = i;
+        boardEl.appendChild(cell);
         
         if (board[i] !== 0) {
-            cell.innerText = board[i];
             cell.classList.add('fixed');
             cell.addEventListener('click', () => selectCell(i));
         } else {
             cell.addEventListener('click', () => selectCell(i));
         }
-        boardEl.appendChild(cell);
+        renderCell(i);
     }
     updateBoardVisually();
     updateCompletedButtons();
@@ -98,6 +140,32 @@ function selectCell(index) {
     selectedIndex = index;
 }
 
+function clearNotesFor(index, val) {
+    const row = Math.floor(index / 9);
+    const col = index % 9;
+    const blockRow = Math.floor(row / 3);
+    const blockCol = Math.floor(col / 3);
+    
+    let changed = false;
+    for (let i = 0; i < 81; i++) {
+        if (!notes[i]) continue;
+        const r = Math.floor(i / 9);
+        const c = i % 9;
+        const br = Math.floor(r / 3);
+        const bc = Math.floor(c / 3);
+
+        if (r === row || c === col || (br === blockRow && bc === blockCol)) {
+            const idx = notes[i].indexOf(val);
+            if (idx > -1) {
+                notes[i].splice(idx, 1);
+                changed = true;
+                renderCell(i);
+            }
+        }
+    }
+    if (changed) saveLocalState();
+}
+
 function applyNumpadVal(val) {
     if (selectedIndex === null || gameFinished) return;
     const cell = document.querySelectorAll('.sudoku-cell')[selectedIndex];
@@ -105,26 +173,45 @@ function applyNumpadVal(val) {
     // Clear
     if (val === 'clear') {
         if (!cell.classList.contains('fixed') && !cell.classList.contains('opponent-solved')) {
-            cell.innerText = '';
+            board[selectedIndex] = 0;
+            if (notes[selectedIndex]) delete notes[selectedIndex];
+            renderCell(selectedIndex);
+            saveLocalState();
         }
         return;
     }
 
     const num = parseInt(val);
+    if (!num) return;
+
+    if (isNoteMode) {
+        if (board[selectedIndex] === 0 && !cell.classList.contains('opponent-solved')) {
+            if (!notes[selectedIndex]) notes[selectedIndex] = [];
+            const idx = notes[selectedIndex].indexOf(num);
+            if (idx > -1) notes[selectedIndex].splice(idx, 1);
+            else notes[selectedIndex].push(num);
+            saveLocalState();
+            renderCell(selectedIndex);
+        }
+        return;
+    }
     
     // Validate Against Solution directly
     if (num === solution[selectedIndex]) {
         // Correct
-        cell.innerText = num;
+        board[selectedIndex] = num;
+        renderCell(selectedIndex);
+        const currentIndex = selectedIndex;
         cell.classList.remove('selected');
-        board[selectedIndex] = num; // Mark as filled locally so we don't click it again
-        if (!myProgress.includes(selectedIndex)) {
-            myProgress.push(selectedIndex);
+        cell.classList.add('fixed'); // make it unclickable
+        
+        if (!myProgress.includes(currentIndex)) {
+            myProgress.push(currentIndex);
             updateScores();
         }
-        cell.classList.add('fixed'); // make it unclickable
         selectedIndex = null;
         
+        clearNotesFor(currentIndex, num);
         saveLocalState();
         checkWinCondition();
         updateCompletedButtons();
@@ -205,6 +292,7 @@ function updateCompletedButtons() {
 
 function showEndScreen(isWin, winReason = null) {
     clearInterval(pollInterval);
+    clearInterval(timerInterval);
     const modal = document.getElementById('end-modal');
     const content = document.getElementById('end-content');
     const title = document.getElementById('end-title');
@@ -212,6 +300,9 @@ function showEndScreen(isWin, winReason = null) {
     
     modal.classList.remove('hidden');
     if (isWin) {
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
         content.classList.add('win');
         title.innerText = "Kazandın!";
         if (winReason === 'abandon') {
@@ -246,6 +337,20 @@ function showEndScreen(isWin, winReason = null) {
 
 // Attach numpad events
 document.querySelectorAll('.numpad-btn').forEach(btn => {
+    if (btn.id === 'btn-note-toggle') {
+        btn.addEventListener('click', () => {
+            if (gameFinished) return;
+            isNoteMode = !isNoteMode;
+            if (isNoteMode) {
+                btn.classList.add('mode-active');
+                btn.innerText = 'Not Al';
+            } else {
+                btn.classList.remove('mode-active');
+                btn.innerText = 'Not Al';
+            }
+        });
+        return;
+    }
     btn.addEventListener('click', (e) => {
         applyNumpadVal(e.target.dataset.val);
     });
