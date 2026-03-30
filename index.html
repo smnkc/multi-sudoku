@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Royale | Modern Multiplayer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container glass">
+        <h1 class="title">Sudoku Royale</h1>
+        
+        <!-- Main Menu -->
+        <div id="view-main" class="view-section active">
+            <button class="btn btn-primary" onclick="showView('view-single')">Tek Oyunculu</button>
+            <button class="btn btn-secondary" onclick="showView('view-create')">Oda Oluştur</button>
+            <button class="btn btn-outline" onclick="showView('view-join')">Odaya Katıl</button>
+        </div>
+
+        <!-- Single Player Menu -->
+        <div id="view-single" class="view-section">
+            <h3 class="mb-3">Tek Oyunculu</h3>
+            <div class="input-group">
+                <label>Zorluk Seviyesi</label>
+                <select id="single-difficulty" class="form-control">
+                    <option value="easy">Kolay</option>
+                    <option value="medium">Orta</option>
+                    <option value="hard">Zor</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="btn-start-single">Oyuna Başla</button>
+            <button class="btn btn-outline" onclick="showView('view-main')">Geri</button>
+        </div>
+
+        <!-- Create Room -->
+        <div id="view-create" class="view-section">
+            <h3 class="mb-3">Oda Oluştur</h3>
+            <div class="input-group">
+                <label>Zorluk Seviyesi</label>
+                <select id="multi-difficulty" class="form-control">
+                    <option value="easy">Kolay</option>
+                    <option value="medium">Orta</option>
+                    <option value="hard">Zor</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" id="btn-create-room">Oluştur ve Kod Al</button>
+            <button class="btn btn-outline" onclick="showView('view-main')">Geri</button>
+            
+            <div id="room-code-display" class="hidden mt-4">
+                <p>Arkadaşınla şu kodu paylaş:</p>
+                <h2 style="color:var(--primary); letter-spacing: 5px; font-size: 2.5rem; margin:10px 0;" id="generated-code">---</h2>
+                <p class="text-muted" style="font-size:0.9rem">Rakip bekleniyor...</p>
+                <div class="loader" style="margin: 10px auto;"></div>
+            </div>
+        </div>
+
+        <!-- Join Room -->
+        <div id="view-join" class="view-section">
+            <h3 class="mb-3">Odaya Katıl</h3>
+            <div class="input-group">
+                <label>Oda Kodu</label>
+                <input type="text" id="join-code" class="form-control" placeholder="Örn: Xy9K2" maxlength="5" style="text-transform: uppercase;">
+            </div>
+            <button class="btn btn-secondary" id="btn-join-room">Katıl</button>
+            <div id="join-error" class="hidden" style="color: var(--danger); margin-top: 10px;"></div>
+            <button class="btn btn-outline mt-3" onclick="showView('view-main')">Geri</button>
+        </div>
+    </div>
+
+    <script src="js/sudoku.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

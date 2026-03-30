@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+:root {
+    --bg-gradient-start: #F8FAFC;
+    --bg-gradient-end: #E2E8F0;
+    --primary: #4F46E5;
+    --primary-hover: #4338CA;
+    --secondary: #06B6D4;
+    --secondary-hover: #0891B2;
+    --success: #10B981;
+    --danger: #EF4444;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --card-border: rgba(255, 255, 255, 0.6);
+    --text-main: #1E293B;
+    --text-muted: #64748B;
+    --cell-bg: #FFFFFF;
+    --cell-border: #E2E8F0;
+    --grid-border: #94A3B8;
+    
+    --cell-size: 50px;
+    --cell-size-mobile: 10vw;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+/* Glassmorphism Classes */
+.glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    background: -webkit-linear-gradient(45deg, var(--secondary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Buttons */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--primary), #8E7CFF);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+}
+
+.btn-secondary {
+    background: linear-gradient(90deg, var(--secondary), #48dbfb);
+    box-shadow: 0 4px 15px rgba(0, 206, 201, 0.4);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 206, 201, 0.6);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--text-muted);
+    color: var(--text-muted);
+}
+.btn-outline:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+/* Forms & Selects */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    outline: none;
+}
+.form-control:focus {
+    border-color: var(--primary);
+}
+
+select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231F2937' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+}
+
+select.form-control option {
+    background: #FFFFFF;
+    color: var(--text-main);
+}
+
+/* Sections */
+.view-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+.view-section.active {
+    display: block;
+}
+
+/* Game Interface */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+.game-info {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+.room-badge {
+    background: rgba(0,206,201, 0.2);
+    color: var(--secondary);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Sudoku Grid */
+.sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, var(--cell-size));
+    grid-template-rows: repeat(9, var(--cell-size));
+    gap: 1px;
+    background: var(--grid-border);
+    border: 3px solid var(--grid-border);
+    border-radius: 5px;
+    width: fit-content;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.sudoku-cell {
+    background: var(--cell-bg);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+/* Styling the 3x3 blocks */
+.sudoku-cell:nth-child(3n) { border-right: 2px solid var(--grid-border); }
+.sudoku-cell:nth-child(9n) { border-right: none; }
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid var(--grid-border);
+}
+
+.sudoku-cell.fixed {
+    color: var(--text-main);
+    cursor: default;
+    background: #F1F5F9;
+}
+
+.sudoku-cell:hover:not(.fixed) {
+    background: #EEF2FF;
+}
+
+.sudoku-cell.selected {
+    background: #E0E7FF;
+    box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.sudoku-cell.highlighted {
+    background: #DBEAFE;
+}
+
+.sudoku-cell.error {
+    color: var(--danger);
+    background: rgba(255, 118, 117, 0.1);
+}
+
+/* Opponent Progress Indicator - GREEN */
+.sudoku-cell.opponent-solved {
+    background: #D1FAE5 !important;
+    color: #059669 !important;
+}
+
+/* Number Pad (Mobile Friendly) */
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    max-width: 600px;
+    margin: 25px auto 0;
+    width: 100%;
+}
+.numpad-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--cell-border);
+    color: var(--text-main);
+    border-radius: 12px;
+    padding: 15px 0;
+    font-size: 1.5rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.numpad-btn:active:not(:disabled) {
+    background: rgba(79, 70, 229, 0.1);
+    transform: scale(0.95);
+}
+
+.numpad-btn:disabled {
+    background: #F1F5F9;
+    color: #94A3B8;
+    cursor: not-allowed;
+    border-color: #E2E8F0;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+/* Status Bar */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+    font-size: 0.9rem;
+}
+.player-score {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.player-score span {
+    font-weight: 800;
+}
+.myself.player-score { border-left: 3px solid var(--primary); }
+.error-score.player-score { border-left: 3px solid var(--danger); }
+.opponent.player-score { border-left: 3px solid var(--success); }
+
+/* Win Overlay */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+.overlay-content {
+    background: var(--bg-gradient-start);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 30px rgba(108, 92, 231, 0.4);
+}
+.overlay-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+.overlay-content.win h2 { color: var(--success); }
+.overlay-content.lose h2 { color: var(--danger); }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .sudoku-board {
+        grid-template-columns: repeat(9, var(--cell-size-mobile));
+        grid-template-rows: repeat(9, var(--cell-size-mobile));
+    }
+    .sudoku-cell {
+        font-size: 1.2rem;
+    }
+    .title { font-size: 2.2rem; }
+}
