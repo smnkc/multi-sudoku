@@ -32,3 +32,5 @@ Bu dosyanın **2 kilit faydası** vardır:
 - **Arayüz (Frontend)**: HTML5, İleri seviye CSS3 (CSS Variables, Grid, Native iOS Scroll Locks), Vanilla Javascript
 - **Oyun Motoru & Eşitleme (Backend)**: JS Fetch API + PHP (`api.php`) + Serverless LocalStorage JSON Cache
 - **Kutlama Efektleri**: `canvas-confetti` JS kütüphanesi
+
+DEMO: https://sudoku.osmanakca.org
