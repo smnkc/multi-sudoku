@@ -88,6 +88,7 @@ function startLobbyPolling(roomCode) {
         const formData = new URLSearchParams();
         formData.append('action', 'poll');
         formData.append('code', roomCode);
+        formData.append('player_id', playerId);
 
         fetch(API_URL, {
             method: 'POST',

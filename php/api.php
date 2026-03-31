@@ -86,29 +86,45 @@ try {
                 sendJson(['error' => 'Oda bulunamadı (Room not found)'], 404);
             }
 
-            $state = json_decode(file_get_contents($file), true);
-
-            if (!isset($state['players'][$playerId])) {
-                if (count($state['players']) >= 2) {
-                    sendJson(['error' => 'Oda dolu (Room is full)'], 403);
+            $fp = fopen($file, 'c+');
+            $currentState = [];
+            if ($fp && flock($fp, LOCK_EX)) {
+                $fileSize = filesize($file);
+                if ($fileSize > 0) {
+                    $jsonContent = fread($fp, $fileSize);
+                    $currentState = json_decode($jsonContent, true);
                 }
-                
-                // Add Player 2
-                $state['players'][$playerId] = [
-                    'progress' => [],
-                    'finished' => false,
-                    'name' => 'Player 2',
-                    'last_active' => time()
-                ];
-                $state['status'] = 'playing';
-                file_put_contents($file, json_encode($state, JSON_PRETTY_PRINT));
-            } else {
-                // Update last active if already in room
-                $state['players'][$playerId]['last_active'] = time();
-                file_put_contents($file, json_encode($state, JSON_PRETTY_PRINT));
-            }
 
-            sendJson(['success' => true, 'state' => $state]);
+                if (!isset($currentState['players'][$playerId])) {
+                    if (count($currentState['players'] ?? []) >= 2) {
+                        flock($fp, LOCK_UN);
+                        fclose($fp);
+                        sendJson(['error' => 'Oda dolu (Room is full)'], 403);
+                    }
+                    
+                    // Add Player 2
+                    $currentState['players'][$playerId] = [
+                        'progress' => [],
+                        'finished' => false,
+                        'name' => 'Player 2',
+                        'last_active' => time()
+                    ];
+                    $currentState['status'] = 'playing';
+                } else {
+                    // Update last active if already in room
+                    $currentState['players'][$playerId]['last_active'] = time();
+                }
+
+                ftruncate($fp, 0);
+                rewind($fp);
+                fwrite($fp, json_encode($currentState, JSON_PRETTY_PRINT));
+                fflush($fp);
+                flock($fp, LOCK_UN);
+                fclose($fp);
+                sendJson(['success' => true, 'state' => $currentState]);
+            } else {
+                sendJson(['error' => 'Oda meşgul, tekrar deneyin (Room busy)'], 500);
+            }
             break;
 
         case 'update':

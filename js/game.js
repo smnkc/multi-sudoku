@@ -307,8 +307,10 @@ function showEndScreen(isWin, winReason = null) {
         title.innerText = "Kazandın!";
         if (winReason === 'abandon') {
             msg.innerText = "Rakip oyundan ayrıldı (Bağlantısı koptu). Hükmen galipsin!";
+        } else if (winReason === 'mistakes') {
+            msg.innerText = "Rakip 3 hata yapıp elendi. Hükmen galipsin!";
         } else {
-            msg.innerText = "Harika oynadın.";
+            msg.innerText = "Harika oynadın, bulmacayı ilk sen çözdün!";
         }
     } else {
         content.classList.add('lose');
